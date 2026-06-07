@@ -12,7 +12,7 @@ public abstract class Hechizo implements Puntuable {
         this.dano = dano;
     }
 
-    // Cada subclase implementa su propia formula
+    // Cada subclase implementa su propia formula de puntaje
     @Override
     public abstract double calcularPuntaje();
 
@@ -42,6 +42,6 @@ public abstract class Hechizo implements Puntuable {
 
     @Override
     public String toString() {
-        return nombre + " (" + tipo + ") - Daño: " + dano + " - Puntaje: " + calcularPuntaje();
+        return nombre + " (" + tipo + ") - Dano: " + dano + " - Puntaje: " + calcularPuntaje();
     }
 }

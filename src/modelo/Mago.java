@@ -12,10 +12,12 @@ public class Mago implements Puntuable {
         this.hechizos = new ArrayList<>();
     }
 
+    // Agrega un hechizo a la lista del mago
     public void agregarHechizo(Hechizo hechizo) {
         this.hechizos.add(hechizo);
     }
 
+    // Suma el puntaje de cada hechizo que domina el mago
     @Override
     public double calcularPuntaje() {
         double total = 0;
