@@ -17,7 +17,7 @@ public class Sistema {
         this.manejador = new ManejadorArchivos();
     }
 
-    // Carga primero los hechizos y luego los magos (que necesitan los hechizos ya cargados)
+    // Carga primero los hechizos y luego los magos
     public void cargarDatos() {
         this.hechizos = manejador.leerHechizos();
         this.magos = manejador.leerMagos(this.hechizos);
@@ -30,13 +30,13 @@ public class Sistema {
     }
 
     public void modificarHechizo(String nombreViejo, Hechizo nuevo) {
-
+        // Reemplazo en el catalogo
         for (int i = 0; i < hechizos.size(); i++) {
             if (hechizos.get(i).getNombre().equalsIgnoreCase(nombreViejo)) {
                 hechizos.set(i, nuevo);
             }
         }
-
+        // Reemplazo en cada mago que tenia ese hechizo
         for (int i = 0; i < magos.size(); i++) {
             ArrayList<Hechizo> hs = magos.get(i).getHechizos();
             for (int j = 0; j < hs.size(); j++) {
@@ -45,6 +45,7 @@ public class Sistema {
                 }
             }
         }
+        // Se guardan ambos archivos porque pudo cambiar el nombre
         manejador.guardarHechizos(hechizos);
         manejador.guardarMagos(magos);
     }
@@ -57,7 +58,6 @@ public class Sistema {
                 i--;
             }
         }
-
         for (int i = 0; i < magos.size(); i++) {
             ArrayList<Hechizo> hs = magos.get(i).getHechizos();
             for (int j = 0; j < hs.size(); j++) {
@@ -98,7 +98,7 @@ public class Sistema {
         manejador.guardarMagos(magos);
     }
 
-    // Busca un hechizo del catalogo por su nombre; sirve para armar magos nuevos
+    // Busca un hechizo del catalogo por su nombre
     public Hechizo buscarHechizo(String nombre) {
         for (int i = 0; i < hechizos.size(); i++) {
             if (hechizos.get(i).getNombre().equalsIgnoreCase(nombre)) {
@@ -106,6 +106,41 @@ public class Sistema {
             }
         }
         return null;
+    }
+
+    // Devuelve una copia de los hechizos ordenada de mayor a menor puntaje.
+    public ArrayList<Hechizo> ordenarHechizosPorPuntaje() {
+        ArrayList<Hechizo> copia = new ArrayList<>(hechizos);
+        for (int i = 0; i < copia.size() - 1; i++) {
+            int mayor = i;
+            for (int j = i + 1; j < copia.size(); j++) {
+                if (copia.get(j).calcularPuntaje() > copia.get(mayor).calcularPuntaje()) {
+                    mayor = j;
+                }
+            }
+            // Intercambia el actual con el de mayor puntaje encontrado
+            Hechizo temp = copia.get(i);
+            copia.set(i, copia.get(mayor));
+            copia.set(mayor, temp);
+        }
+        return copia;
+    }
+
+    // Devuelve una copia de los magos ordenada de mayor a menor puntaje total
+    public ArrayList<Mago> ordenarMagosPorPuntaje() {
+        ArrayList<Mago> copia = new ArrayList<>(magos);
+        for (int i = 0; i < copia.size() - 1; i++) {
+            int mayor = i;
+            for (int j = i + 1; j < copia.size(); j++) {
+                if (copia.get(j).calcularPuntaje() > copia.get(mayor).calcularPuntaje()) {
+                    mayor = j;
+                }
+            }
+            Mago temp = copia.get(i);
+            copia.set(i, copia.get(mayor));
+            copia.set(mayor, temp);
+        }
+        return copia;
     }
 
     public ArrayList<Hechizo> getHechizos() {

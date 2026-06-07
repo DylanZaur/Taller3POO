@@ -15,13 +15,11 @@ import modelo.Mago;
 import modelo.Planta;
 import modelo.Tierra;
 
-// Se encarga de leer y escribir los archivos .txt.
 public class ManejadorArchivos {
 
     private static final String ARCHIVO_HECHIZOS = "Hechizos.txt";
     private static final String ARCHIVO_MAGOS = "Magos.txt";
 
-    // Lee Hechizos.txt y crea la subclase correcta segun el tipo.
     public ArrayList<Hechizo> leerHechizos() {
         ArrayList<Hechizo> hechizos = new ArrayList<>();
 
@@ -35,8 +33,8 @@ public class ManejadorArchivos {
                 }
 
                 String[] partes = linea.split(";");
-                String nombre = partes[0];
-                String tipo = partes[1];
+                String nombre = partes[0].trim();
+                String tipo = partes[1].trim();
                 int dano = Integer.parseInt(partes[2]);
 
                 // Segun el tipo se arma la subclase correspondiente
@@ -90,11 +88,11 @@ public class ManejadorArchivos {
 
                 String[] nombresHechizos = partes[1].split("\\|");
                 for (int i = 0; i < nombresHechizos.length; i++) {
-                    Hechizo encontrado = buscarHechizo(hechizos, nombresHechizos[i]);
+                    Hechizo encontrado = buscarHechizo(hechizos, nombresHechizos[i].trim());
                     if (encontrado != null) {
                         mago.agregarHechizo(encontrado);
                     } else {
-                        System.out.println("Aviso: el hechizo '" + nombresHechizos[i] + "' del mago " + nombreMago + " no esta en Hechizos.txt");
+                        System.out.println("Aviso: el hechizo '" + nombresHechizos[i].trim() + "' del mago " + nombreMago + " no esta en Hechizos.txt");
                     }
                 }
                 magos.add(mago);
@@ -108,7 +106,7 @@ public class ManejadorArchivos {
         return magos;
     }
 
-    // Sobrescribe Hechizos.txt respetando el formato original de cada tipo
+    // Sobrescribe Hechizos.txt
     public void guardarHechizos(ArrayList<Hechizo> hechizos) {
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(ARCHIVO_HECHIZOS));
@@ -172,7 +170,7 @@ public class ManejadorArchivos {
         }
     }
 
-    // Busca un hechizo por su nombre dentro de la lista; devuelve null si no esta
+    // Busca un hechizo por su nombre dentro de la lista, devuelve null si no esta
     private Hechizo buscarHechizo(ArrayList<Hechizo> hechizos, String nombre) {
         for (int i = 0; i < hechizos.size(); i++) {
             Hechizo h = hechizos.get(i);
