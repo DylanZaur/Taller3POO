@@ -2,7 +2,6 @@
 // 21.387.801-8
 // ICI
 package main;
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -23,6 +22,7 @@ public class Main {
 
         Scanner sc = new Scanner(System.in);
 
+        // Menu principal
         int opcion = -1;
         while (opcion != 0) {
             System.out.println("===== MENU PRINCIPAL =====");
@@ -46,6 +46,7 @@ public class Main {
         sc.close();
     }
 
+    // Submenu del administrador con las 6 opciones de CRUD
     private static void menuAdministrador(Scanner sc, Sistema sistema) {
         int opcion = -1;
         while (opcion != 0) {
@@ -57,7 +58,7 @@ public class Main {
             System.out.println("5. Modificar Hechizo");
             System.out.println("6. Eliminar Hechizo");
             System.out.println("0. Volver");
-            System.out.print("Opcion: ");
+            System.out.print("> ");
             opcion = leerEntero(sc);
 
             if (opcion == 1) {
@@ -66,16 +67,14 @@ public class Main {
                 System.out.println("Mago agregado.");
 
             } else if (opcion == 2) {
-                System.out.print("Nombre del mago a modificar: ");
-                String viejo = sc.nextLine();
+                String viejo = pedirNombreMagoExistente(sc, sistema, "Nombre del mago a modificar: ");
                 System.out.println("Ingresa los datos nuevos del mago:");
                 Mago nuevo = crearMagoDesdeConsola(sc, sistema);
                 sistema.modificarMago(viejo, nuevo);
                 System.out.println("Mago modificado.");
 
             } else if (opcion == 3) {
-                System.out.print("Nombre del mago a eliminar: ");
-                String nombre = sc.nextLine();
+                String nombre = pedirNombreMagoExistente(sc, sistema, "Nombre del mago a eliminar: ");
                 sistema.eliminarMago(nombre);
                 System.out.println("Mago eliminado.");
 
@@ -87,8 +86,7 @@ public class Main {
                 }
 
             } else if (opcion == 5) {
-                System.out.print("Nombre del hechizo a modificar: ");
-                String viejo = sc.nextLine().trim();
+                String viejo = pedirNombreHechizoExistente(sc, sistema, "Nombre del hechizo a modificar: ");
                 System.out.println("Ingresa los datos nuevos del hechizo:");
                 Hechizo nuevo = crearHechizoDesdeConsola(sc);
                 if (nuevo != null) {
@@ -97,8 +95,7 @@ public class Main {
                 }
 
             } else if (opcion == 6) {
-                System.out.print("Nombre del hechizo a eliminar: ");
-                String nombre = sc.nextLine();
+                String nombre = pedirNombreHechizoExistente(sc, sistema, "Nombre del hechizo a eliminar: ");
                 sistema.eliminarHechizo(nombre);
                 System.out.println("Hechizo eliminado.");
 
@@ -143,6 +140,7 @@ public class Main {
                 }
 
             } else if (opcion == 3) {
+                // Solo nombre y tipo, sin puntuacion
                 System.out.println("HECHIZOS:");
                 for (int i = 0; i < sistema.getHechizos().size(); i++) {
                     Hechizo h = sistema.getHechizos().get(i);
@@ -150,6 +148,7 @@ public class Main {
                 }
 
             } else if (opcion == 4) {
+                // Solo nombre de los magos
                 System.out.println("MAGOS:");
                 for (int i = 0; i < sistema.getMagos().size(); i++) {
                     System.out.println(sistema.getMagos().get(i).getNombre());
@@ -182,7 +181,7 @@ public class Main {
         String nombre = sc.nextLine();
         System.out.print("Tipo (Fuego/Tierra/Planta/Agua): ");
         String tipo = sc.nextLine();
-        System.out.print("Dano: ");
+        System.out.print("Daño: ");
         int dano = leerEntero(sc);
 
         if (tipo.equalsIgnoreCase("Fuego")) {
@@ -215,7 +214,7 @@ public class Main {
         }
     }
 
-    // Pide el nombre del mago y sus hechizos
+    // Pide el nombre del mago y sus hechizos (que deben existir en el catalogo)
     private static Mago crearMagoDesdeConsola(Scanner sc, Sistema sistema) {
         System.out.print("Nombre del mago: ");
         String nombre = sc.nextLine();
@@ -240,8 +239,32 @@ public class Main {
         return mago;
     }
 
-    // Lee una linea y la convierte a entero; si el usuario escribe algo
-    // que no es numero, avisa y vuelve a pedir, asi el programa no se cae.
+    // Pide el nombre de un mago y lo vuelve a pedir hasta que exista en el sistema
+    private static String pedirNombreMagoExistente(Scanner sc, Sistema sistema, String mensaje) {
+        while (true) {
+            System.out.print(mensaje);
+            String nombre = sc.nextLine();
+            if (sistema.buscarMago(nombre) != null) {
+                return nombre;
+            }
+            System.out.println("No se encontro un mago con ese nombre, intenta de nuevo.");
+        }
+    }
+
+    // Pide el nombre de un hechizo y lo vuelve a pedir hasta que exista en el catalogo
+    private static String pedirNombreHechizoExistente(Scanner sc, Sistema sistema, String mensaje) {
+        while (true) {
+            System.out.print(mensaje);
+            String nombre = sc.nextLine();
+            if (sistema.buscarHechizo(nombre) != null) {
+                return nombre;
+            }
+            System.out.println("No se encontro un hechizo con ese nombre, intenta de nuevo.");
+        }
+    }
+
+    // Lee una linea y la convierte a entero, si el usuario escribe algo
+    // que no es numero avisa y vuelve a pedir asi el programa no se cae.
     private static int leerEntero(Scanner sc) {
         boolean valido = false;
         int numero = 0;

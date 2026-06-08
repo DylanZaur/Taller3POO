@@ -17,7 +17,7 @@ public class Sistema {
         this.manejador = new ManejadorArchivos();
     }
 
-    // Carga primero los hechizos y luego los magos
+    // Carga primero los hechizos y luego los magos (que necesitan los hechizos ya cargados)
     public void cargarDatos() {
         this.hechizos = manejador.leerHechizos();
         this.magos = manejador.leerMagos(this.hechizos);
@@ -29,6 +29,8 @@ public class Sistema {
         manejador.guardarHechizos(hechizos);
     }
 
+    // Reemplaza el hechizo (por nombre) por uno nuevo en el catalogo
+    // y tambien en cada mago que lo tuviera, para que el cambio se refleje.
     public void modificarHechizo(String nombreViejo, Hechizo nuevo) {
         // Reemplazo en el catalogo
         for (int i = 0; i < hechizos.size(); i++) {
@@ -52,12 +54,14 @@ public class Sistema {
 
     // Elimina un hechizo del catalogo y de todos los magos que lo tenian
     public void eliminarHechizo(String nombre) {
+        // Quita del catalogo
         for (int i = 0; i < hechizos.size(); i++) {
             if (hechizos.get(i).getNombre().equalsIgnoreCase(nombre)) {
                 hechizos.remove(i);
                 i--;
             }
         }
+        // Quita de cada mago que lo tuviera
         for (int i = 0; i < magos.size(); i++) {
             ArrayList<Hechizo> hs = magos.get(i).getHechizos();
             for (int j = 0; j < hs.size(); j++) {
@@ -98,11 +102,21 @@ public class Sistema {
         manejador.guardarMagos(magos);
     }
 
-    // Busca un hechizo del catalogo por su nombre
+    // Busca un hechizo del catalogo por su nombre, sirve para armar magos nuevos
     public Hechizo buscarHechizo(String nombre) {
         for (int i = 0; i < hechizos.size(); i++) {
             if (hechizos.get(i).getNombre().equalsIgnoreCase(nombre)) {
                 return hechizos.get(i);
+            }
+        }
+        return null;
+    }
+
+    // Busca un mago por su nombre; devuelve null si no existe
+    public Mago buscarMago(String nombre) {
+        for (int i = 0; i < magos.size(); i++) {
+            if (magos.get(i).getNombre().equalsIgnoreCase(nombre)) {
+                return magos.get(i);
             }
         }
         return null;

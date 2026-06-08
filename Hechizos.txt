@@ -88,3 +88,4 @@ Ataque Arena;Tierra;102;40
 Tierra Viva;Tierra;46;36
 Origen Pulso;Agua;21;30,208
 Bucle Arena;Planta;15;2,8
+Papu;Fuego;98;4

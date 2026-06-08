@@ -42,6 +42,6 @@ public abstract class Hechizo implements Puntuable {
 
     @Override
     public String toString() {
-        return nombre + " (" + tipo + ") - Dano: " + dano + " - Puntaje: " + calcularPuntaje();
+        return nombre + " (" + tipo + ") - Daño: " + dano + " - Puntaje: " + calcularPuntaje();
     }
 }
